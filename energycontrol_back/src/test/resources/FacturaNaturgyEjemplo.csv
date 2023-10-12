@@ -1,0 +1,23 @@
+;;;;;;
+;;;;;;
+;;;;;;
+;;;;DATOS DE LA FACTURA DE ELECTRICIDAD;;
+;;;;Nº factura: ;FE22137015493312;
+;;;;Periodo de consumo: ;10/06/2022 a 29/06/2022;
+;;;;DATOS DEL CONTRATO;;
+;;;;Código unificado de punto de suministro CUPS: ;ES0022000004124187BK1P;
+;;;;Dirección de suministro: ;LUG ALDEA A FRAGA 0043   Piso:BJ  (15319) A CORUÑA BERGONDO A FRAGA -BERGONDO-;
+Comercializadora Regulada, Gas & Power, S.A.  A-65.067.332;;;;;;
+Av. San Luis, 77. 28033 Madrid;;;;;;
+;;;;;;
+Fecha;Hora Desde;Hora Hasta;Tipo consumo;Consumo (kWh);Precio horario de energía (€/kWh);Importe horario de energía (€)
+07/01/2022;0;1;Energía Activa Valle;0,597;0,277119548640;0,165440370538
+07/01/2022;1;2;Energía Activa Valle;0,477;0,250323198960;0,119404165904
+07/01/2022;2;3;Energía Activa Valle;0,414;0,240038682120;0,099376014398
+;;;;;;
+Consumo agrupado:;;;;;;
+;;;;;;
+Periodo;;Tipo consumo;Consumo (kWh);Precio por coste de energía: Importe de energía / Consumo (€/kWh);Importe de energía (€);
+07/01/2022;29/06/2022;Energía Activa Punta;636,006;0,285958;181,870921089578;
+07/01/2022;29/06/2022;Energía Activa Llano;614,991;0,270972;166,645291353595;
+07/01/2022;29/06/2022;Energía Activa Valle;1070,003;0,262151;280,502585451800;
