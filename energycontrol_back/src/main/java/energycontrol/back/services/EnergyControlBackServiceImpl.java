@@ -648,15 +648,24 @@ public class EnergyControlBackServiceImpl implements EnergyControlBackService
 						//   [ToDo]
 						
 						//-> Persistir la línea de factura
-						this.billConsumptionDao.insert(bc);
-						
-						logger.debug(String.format(
-							"Consumo cargado: %s - %.3f kWh", 
-							bc.getId(),
-							bc.getKwh()
-							));
-						
-						rowsOk++;
+						try
+						{
+							this.billConsumptionDao.insert(bc);
+							
+							logger.debug(String.format(
+								"Consumo cargado: %s - %.3f kWh", 
+								bc.getId(),
+								bc.getKwh()
+								));
+							
+							rowsOk++;
+						}
+						catch(Exception ee)
+						{
+							rowsKo ++;
+							
+							logger.warn(String.format("Error al guardar fila de consumo %d: %s", rowsKo, ee.getMessage()));
+						}	
 					}
 					else
 					{
@@ -709,7 +718,7 @@ public class EnergyControlBackServiceImpl implements EnergyControlBackService
 				,e
 				,EUserMessagesKeys.InternalError.stringValue
 				);
-			be.addUserMessageArgument("loadMe2ConsumptionsFromCsv");
+			be.addUserMessageArgument("loadBillNaturgyFromCsv");
 			gar.setActionResult(EResult.KO, be);
 		}
 		
