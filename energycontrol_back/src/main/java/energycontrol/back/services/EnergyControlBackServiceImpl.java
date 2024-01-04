@@ -15,7 +15,7 @@ import mbt.utilities.PropertiesFileReader;
 import mbt.utilities.PropertiesFileReaderFactory;
 import mbt.utilities.ResourceBundleReader;
 import mbt.utilities.ResourceBundleReaderFactory;
-
+import energycontrol.back.bussines.BillChecker;
 import energycontrol.back.bussines.BillValidator;
 import energycontrol.back.bussines.CsvImportBillNaturgyHelper;
 import energycontrol.back.bussines.CsvImportEfergyE2ConsumptionsHelper;
@@ -963,7 +963,7 @@ public class EnergyControlBackServiceImpl implements EnergyControlBackService
 									else
 									{
 										beDay = new BussinesException(
-											 String.format("No se ha podido genera el GnuPlot dat file del día %s debido a: %s", gpHelper.getDay(), sbErrores.toString())
+											 String.format("No se ha podido generar el GnuPlot dat file del día %s debido a: %s", gpHelper.getDay(), sbErrores.toString())
 											,null
 											,EUserMessagesKeys.GnuPlotDataFileNotGenerated.stringValue
 											);
@@ -1012,5 +1012,132 @@ public class EnergyControlBackServiceImpl implements EnergyControlBackService
 		
 		return gar;
 	}
+	
+	public GenericActionResult<String> checkBill(String billNumber, String mSourceCode)
+	{
+		GenericActionResult<String> gar = new GenericActionResult<String>();
+		gar.setActionResult(EResult.NOT_EXECUTED);
+		
+		try
+		{
+			//Recuperar la factura
+			List<Bill> lBills = this.billDao.findByBillNumber(billNumber);
+			
+			if((lBills == null) || (lBills.size() < 1))
+			{
+				BussinesException be = new BussinesException(
+					 "La factura no está cargada en el sistema."
+					,null
+					,EUserMessagesKeys.BillNotLoaded.stringValue
+					);
+				gar.setActionResult(EResult.KO, be);
+			}
+			else
+			{
+				//Recuperar el Maestro del origen de consumos
+				MSource ms = this.mSourceDao.findById(mSourceCode);
+				
+				if(ms == null)
+				{
+					BussinesException be = new BussinesException(
+						 "El maestro de orígenes de consumos no está cargado en el sistema."
+						,null
+						,EUserMessagesKeys.MSourceNotLoaded.stringValue
+						);
+					gar.setActionResult(EResult.KO, be);
+				}
+				else
+				{
+					Bill bill = lBills.get(0);
+					
+					//Recuperar los consumos de la factura
+					List<BillConsumption> lbc = this.billConsumptionDao.findBillConsumptions(billNumber);
+					
+					if(lbc == null || lbc.size() < 1)
+					{
+						BussinesException be = new BussinesException(
+							 "La factura no tienen consumos, o estos no están cargados en el sistema."
+							,null
+							,EUserMessagesKeys.BillConsumptionsNotLoaded.stringValue
+							);
+						gar.setActionResult(EResult.KO, be);
+					}
+					else
+					{
+						//Crear una instancia de la clase BillChecker
+						BillChecker billChecker = new BillChecker(bill, ms);
+						
+						int rowsKo = 0;
+						int rowsOk = 0;
+						
+						//Cargar los consumos de la factura y los de verificación en billChecker
+						for(BillConsumption bc : lbc)
+						{
+							try
+							{
+								billChecker.addBillConsumption(bc);
+								
+								List<Consumption> lsc = this.consumptionDao.findSourceConsumption(mSourceCode, bc.getDateHour());
+								if(lsc != null && lsc.size() > 0)
+								{
+									billChecker.addVerifiedConsumption(lsc.get(0));
+								}
+								
+								rowsOk++;
+							}
+							catch(BussinesException be)
+							{
+								rowsKo++;
+								logger.warn(String.format("Error al cargar consumos de la fecha %s: %s", bc.getDateHour(), be.getMessage()));
+							}
+						}
+						
+						logger.debug(String.format("%d Consumos cargados correctamente de un total de %d", rowsOk, rowsOk + rowsKo));
+						
+						//Comprobar los consumos
+						billChecker.checkLinesBill();
+						
+						logger.debug(String.format(
+							"%d Consumos procesados correctamente de un total de %d", 
+							billChecker.getRowsOk(), 
+							billChecker.getRowsOk() + billChecker.getRowsKo()
+							));
+						
+						//Generar el CSV con los resultados
+						billChecker.generateCheckCsvFile();
+						
+						//Preparar el retorno del método
+						gar.setResultObject(String.format(
+							"Generado el csv %s con el resultado de la comprobación", 
+							billChecker.getCsvFileName()
+							));
+						if(billChecker.getRowsKo() == 0)
+						{
+							gar.setActionResult(EResult.OK);
+						}
+						else
+						{
+							gar.setActionResult(EResult.KO);
+						}
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			
+			BussinesException be = new BussinesException(
+				 e.getMessage()
+				,e
+				,EUserMessagesKeys.InternalError.stringValue
+				);
+			be.addUserMessageArgument("checkBill");
+			gar.setActionResult(EResult.KO, be);
+		}
+		
+		return gar;
+	}
+	
 	//<-
 }

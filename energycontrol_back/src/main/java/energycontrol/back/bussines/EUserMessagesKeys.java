@@ -38,7 +38,8 @@ public enum EUserMessagesKeys
 	GnuPlotDataFileNotGenerated("GnuPlotDataFileNotGenerated"),
 	GnuPlotDataFileGeneratedWithErrors("GnuPlotDataFileGeneratedWithErrors"),
 	GnuPlotMissingDatFileName("GnuPlotMissingDatFileName"),
-	ConsumptionNotBelongBill("ConsumptionNotBelongBill");
+	ConsumptionNotBelongBill("ConsumptionNotBelongBill"),
+	DateOfConsumptionNotBelongBill("DateOfConsumptionNotBelongBill");
 	
 	public final String stringValue;
 	

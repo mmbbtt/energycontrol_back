@@ -297,4 +297,64 @@ public class EnergyControlBackServiceImplTest
 		assertEquals(true, ok);
 	}
 	
+	@Test
+	public void checkBill()
+	{
+		System.out.println("Inicio del test del método EnergyControlBackServiceImpl.checkBill(): ");
+		boolean ok = true;
+		
+		try
+		{
+			//Cargar factura
+			URL resBill = getClass().getClassLoader().getResource("FacturaNaturgyEjemplo.csv"); //BillNumber=FE22137015493312
+			File fileBill = Paths.get(resBill.toURI()).toFile();
+			
+			GenericActionResult<Bill> garBill = this.service.loadBillNaturgyFromCsv(
+					fileBill.getAbsolutePath(), 
+					LocalDate.of(2022, 6, 10), 
+					ECollectionMethod.SIMULATED
+					);
+			
+			this.mockBill = garBill.getResultObject();
+			
+			//Cargar consumos de verificación
+			URL resSource = getClass().getClassLoader().getResource("ConsumosEE2factura.csv"); 
+			File fileSource = Paths.get(resSource.toURI()).toFile();
+			
+			GenericActionResult<Source> garSource = this.service.loadEfergyE2ConsumptionsFromCsv(
+					fileSource.getAbsolutePath(), 
+					LocalDate.of(2022, 6, 10)
+					);
+			
+			this.mockSource= garSource.getResultObject();
+			
+			
+			//Comprobar factura
+			GenericActionResult<String> garCheck = this.service.checkBill(
+					"FE22137015493312", 
+					"EE2"
+					);
+			
+			System.out.println(garCheck.getResultObject());
+			
+			if(garCheck.getResult() != EResult.OK)
+			{
+				ok = false;
+				System.out.printf("El método checkBill() ha devuelto errores: %s", garCheck.getExceptionsMessages());
+			}
+		}
+		catch(Exception e)
+		{
+			ok = false;
+			System.out.printf("Se ha producido una excepción en checkBill(): %s", e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			this.tearDown();
+		}
+		
+		assertEquals(true, ok);
+	}
+	
 }

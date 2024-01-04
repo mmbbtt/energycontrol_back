@@ -1,0 +1,39 @@
+Factura; FE22137015493312
+
+kWh Totales
+kWh-Factura;kWh-Verificados;kWh-Factura - kWh-Verificados
+1,488000;0,427000;1,061000
+
+kWh Valle Totales
+kWh-Factura;kWh-Verificados;kWh-Factura - kWh-Verificados
+0,597000;0,235000;0,362000
+
+kWh Llano Totales
+kWh-Factura;kWh-Verificados;kWh-Factura - kWh-Verificados
+0,477000;0,127000;0,350000
+
+kWh Punta Totales
+kWh-Factura;kWh-Verificados;kWh-Factura - kWh-Verificados
+0,414000;0,065000;0,349000
+
+Eur Totales
+Eur-Factura;Eur-Verificados;Eur-Factura - Eur-Verificados
+0,384221;0,112517;0,271704
+
+Eur Valle Totales
+Eur-Factura;Eur-Verificados;Eur-Factura - Eur-Verificados
+0,165440;0,065123;0,100317
+
+Eur Llano Totales
+Eur-Factura;Eur-Verificados;Eur-Factura - Eur-Verificados
+0,119404;0,031791;0,087613
+
+Eur Punta Totales
+Eur-Factura;Eur-Verificados;Eur-Factura - Eur-Verificados
+0,099376;0,015603;0,083774
+
+Detalle por horas
+Hora;Período;Eur/kWh;kWh-Factura;kWh-Verificados;kWh-Factura - kWh-Verificados;Eur-Factura;Eur-Verificados;Eur-Factura - Eur-Verificados
+2022010701;OffPeak;0,277120;0,597000;0,235000;0,362000;0,165440;0,065123;0,100317
+2022010702;Standard;0,250323;0,477000;0,127000;0,350000;0,119404;0,031791;0,087613
+2022010703;Peak;0,240039;0,414000;0,065000;0,349000;0,099376;0,015603;0,083774

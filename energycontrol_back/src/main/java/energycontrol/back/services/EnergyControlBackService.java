@@ -132,7 +132,16 @@ public interface EnergyControlBackService
 	 *   
 	 * @param billNumber Número de factura a partir de la cual generar el fichero
 	 * @param mSourceCode Código del maestro de de orígenes de consumos que se usan para verificar la factura
-	 * @return El nombre del fichero generado
+	 * @return Nombre del fichero generado
 	 */
 	public GenericActionResult<String> generateGnuPlotFileVerifiedBill(String billNumber, String mSourceCode);
+	
+	/**
+	 * Genera un fichero CSV, con la comprobación de los consumos de la factura frente a los verificdos.
+	 * 
+	 * @param billNumber Número de factura a comprobar
+	 * @param mSourceCode Código del maestro de de orígenes de consumos que se usan para verificar la factura
+	 * @return Nombre del fichero generado.
+	 */
+	public GenericActionResult<String> checkBill(String billNumber, String mSourceCode);
 }

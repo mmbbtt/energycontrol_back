@@ -55,4 +55,23 @@ public class ConsumptionDaoJpaImpl extends GenericDaoJpaImpl<Consumption, String
 
 		return lObjects;
 	}
+	
+	public List<Consumption> findSourceConsumption(String codeMSource, DateHour dateHour) 
+	{
+		List<Consumption> lObjects = null;
+		
+		TypedQuery<Consumption> consulta = manager.createQuery(
+				"select c from Consumption c " + 
+		        "where c.source.mSource.code = :codeMSource " + 
+				"and c.dateHour.id = :dateHour " + 
+				"order by c.id"
+				,Consumption.class
+				);
+		consulta.setParameter("codeMSource", codeMSource);
+		consulta.setParameter("dateHour", dateHour.getId());
+		
+		lObjects = consulta.getResultList();
+
+		return lObjects;
+	}
 }

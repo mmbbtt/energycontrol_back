@@ -12,8 +12,8 @@ Av. San Luis, 77. 28033 Madrid;;;;;;
 ;;;;;;
 Fecha;Hora Desde;Hora Hasta;Tipo consumo;Consumo (kWh);Precio horario de energía (€/kWh);Importe horario de energía (€)
 07/01/2022;0;1;Energía Activa Valle;0,597;0,277119548640;0,165440370538
-07/01/2022;1;2;Energía Activa Valle;0,477;0,250323198960;0,119404165904
-07/01/2022;2;3;Energía Activa Valle;0,414;0,240038682120;0,099376014398
+07/01/2022;1;2;Energía Activa Llano;0,477;0,250323198960;0,119404165904
+07/01/2022;2;3;Energía Activa Punta;0,414;0,240038682120;0,099376014398
 ;;;;;;
 Consumo agrupado:;;;;;;
 ;;;;;;

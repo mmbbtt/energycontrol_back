@@ -24,4 +24,14 @@ public interface ConsumptionDao extends GenericDao<Consumption, String>
 	 * @return
 	 */
 	public List<Consumption> findSourceConsumptionsOfDay(String codeMSource, DateHour dateHour);
+	
+	/**
+	 * Devuelve los consumos asociados al maestro de origen de consumos cuyo código coincide con el pasado por argumento,
+	 * y a la fecha pasada por argumento.
+	 * 
+	 * @param codeMSource
+	 * @param dateHour
+	 * @return
+	 */
+	public List<Consumption> findSourceConsumption(String codeMSource, DateHour dateHour);
 }

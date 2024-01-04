@@ -241,7 +241,7 @@ public class GnuplotHelper
 	
 	/**
 	 * Añade el consumo de la factura a la lista de consumos de la factura.
-	 * Si el dái del consumo a añadir es igual al de los consumos preivos deuvelve true.
+	 * Si el día del consumo a añadir es igual al de los consumos preivos deuvelve true.
 	 * Si el día del consumo a añadir es distinto de los preivos, no lo añade, y retorna false.
 	 * 
 	 * @param billConsumption
@@ -372,7 +372,7 @@ public class GnuplotHelper
 		
 		try
 		{
-			//Crear el nombre de ficehro
+			//Crear el nombre de fichero
 			this.datFileName = String.format(
 				"%s_%s_%s.dat", 
 				this.sDay,
