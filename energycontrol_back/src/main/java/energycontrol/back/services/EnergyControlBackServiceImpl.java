@@ -19,6 +19,7 @@ import energycontrol.back.bussines.BillChecker;
 import energycontrol.back.bussines.BillValidator;
 import energycontrol.back.bussines.CsvImportBillNaturgyHelper;
 import energycontrol.back.bussines.CsvImportEfergyE2ConsumptionsHelper;
+import energycontrol.back.bussines.CsvImportUfdConsumptionsHelper;
 import energycontrol.back.bussines.DateHourValidator;
 import energycontrol.back.bussines.EUserMessagesKeys;
 import energycontrol.back.bussines.EntitiesHelper;
@@ -744,6 +745,123 @@ public class EnergyControlBackServiceImpl implements EnergyControlBackService
 			if(ms == null)
 			{
 				ms = new MSource(ESourceType.ConsumptionMeter, "EE2", "Efergy E2 Meter");
+				this.mSourceDao.insert(ms);
+			}
+			
+			Source source = new Source(ms, dateOfData);
+			
+			//-> Persistir el objeto Source
+			this.sourceDao.insert(source);
+			
+			//-> Situarnos en la primera fila de consumo
+			while ((csvRow = csvImportHelper.readNextRowOfCsv())  != null) 
+			{ 
+				if(csvImportHelper.isConsumptionsHeaderRow(csvRow))
+				{
+					break;
+				}
+			}
+			
+			//-> Recuperar consumos
+			int rowsKo = 0;
+			int rowsOk = 0;
+			while ((csvRow = csvImportHelper.readNextRowOfCsv())  != null) 
+			{
+				GenericActionResult<Consumption> garConsumption = csvImportHelper.csvRow2Consumption(csvRow, source);
+				
+				if(garConsumption.getResult() == EResult.OK)
+				{
+					Consumption c = garConsumption.getResultObject();
+					
+					//-> Persistir Consumption.dateHour
+					DateHour dh = this.dateHourDao.findById(c.getDateHour().getId());
+					if(dh == null)
+					{
+						dh = c.getDateHour();
+						this.dateHourDao.insert(dh);
+					}
+					
+					//-> Validar el consumo
+					//   [ToDo]
+					
+					//-> Persistir el consumo
+					this.consumptionDao.insert(c);
+					
+					logger.debug(String.format(
+						"Consumo cargado: %s - %.3f kWh", 
+						c.getId(),
+						c.getKwh()
+						));
+					
+					rowsOk++;
+				}
+				else
+				{
+					rowsKo ++;
+					logger.warn(String.format("Error al leer fila de consumo %d: %s", rowsKo, garConsumption.getExceptionsMessages()));
+				}
+			}
+			
+			//-> Establecer el objeto resuldao		
+			gar.setResultObject(source);
+			
+			//-> Establecer el resultado
+			if(rowsKo > 0)
+			{
+				logger.warn(String.format("Fallo al generar %d consumos.", rowsKo));
+				
+				BussinesException be = new BussinesException(
+						 String.format("Fallo al generar %d consumos", rowsKo)
+						,null
+						,EUserMessagesKeys.CsvImportKo.stringValue
+						);
+					be.addUserMessageArgument(rowsKo);
+					be.addUserMessageArgument(rowsKo + rowsOk);
+				gar.addException(be);
+				
+				gar.setActionResult(EResult.KO);	
+			}
+			else
+			{
+				logger.debug(String.format("Csv importado correctamente con %d consumos", rowsOk));
+				gar.setActionResult(EResult.OK);
+			}
+		}
+		catch(Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			
+			BussinesException be = new BussinesException(
+				 e.getMessage()
+				,e
+				,EUserMessagesKeys.InternalError.stringValue
+				);
+			be.addUserMessageArgument("loadEfergyE2ConsumptionsFromCsv");
+			gar.setActionResult(EResult.KO, be);
+		}
+		
+		return gar;
+	}
+	
+	public GenericActionResult<Source> loadUfdConsumptionsFromCsv(String csvPathFile, LocalDate dateOfData)
+	{
+		GenericActionResult<Source> gar = new GenericActionResult<Source> ();
+		gar.setActionResult(EResult.NOT_EXECUTED);
+		
+		try
+		{
+			CsvImportUfdConsumptionsHelper csvImportHelper = new CsvImportUfdConsumptionsHelper(
+					 csvPathFile
+					,"energycontrol-back.properties"
+					);
+			
+			String csvRow = null;
+			
+			//-> Crear el objeto Source
+			MSource ms = this.mSourceDao.findById("UFD");
+			if(ms == null)
+			{
+				ms = new MSource(ESourceType.DistributionCompany, "UFD", "UFD Distribución Electricidad, S.A.");
 				this.mSourceDao.insert(ms);
 			}
 			

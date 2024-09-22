@@ -77,7 +77,7 @@ public class EnergyControlBackServiceImplTest
 	}
 	
 	@Test
-	public void generateDateHours()
+	public void generateDateHoursTest()
 	{
 		System.out.println("Inicio del test del método EnergyControlBackServiceImpl.generateDateHours(): ");
 		
@@ -256,7 +256,7 @@ public class EnergyControlBackServiceImplTest
 	}
 	
 	@Test
-	public void loadEfergyE2ConsumptionsFromCsv()
+	public void loadEfergyE2ConsumptionsFromCsvTest()
 	{
 		System.out.println("Inicio del test del método EnergyControlBackServiceImpl.loadEfergyE2ConsumptionsFromCsv(): ");
 		boolean ok = true;
@@ -298,7 +298,49 @@ public class EnergyControlBackServiceImplTest
 	}
 	
 	@Test
-	public void checkBill()
+	public void loadUfdConsumptionsFromCsvTest()
+	{
+		System.out.println("Inicio del test del método EnergyControlBackServiceImpl.loadUfdConsumptionsFromCsv(): ");
+		boolean ok = true;
+		
+		try
+		{
+			URL res = getClass().getClassLoader().getResource("ConsumosUFDejemplo.csv"); 
+			File file = Paths.get(res.toURI()).toFile();
+			
+			GenericActionResult<Source> gar = this.service.loadUfdConsumptionsFromCsv(
+					file.getAbsolutePath(), 
+					LocalDate.of(2024, 9, 22)
+					);
+			
+			this.mockSource= gar.getResultObject();
+			
+			if(gar.getResult() != EResult.OK)
+			{
+				ok = false;
+				System.out.printf("El método loadUfdConsumptionsFromCsv() ha devuelto errores: %s", gar.getExceptionsMessages());
+			}
+			else
+			{
+				System.out.println("Test OK.");
+			}
+		}
+		catch(Exception e)
+		{
+			ok = false;
+			System.out.printf("Se ha producido una excepción en loadUfdConsumptionsFromCsv(): %s", e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			this.tearDown();
+		}
+		
+		assertEquals(true, ok);
+	}
+	
+	@Test
+	public void checkBillTest()
 	{
 		System.out.println("Inicio del test del método EnergyControlBackServiceImpl.checkBill(): ");
 		boolean ok = true;

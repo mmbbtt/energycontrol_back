@@ -109,6 +109,16 @@ public interface EnergyControlBackService
 	public GenericActionResult<Source> loadEfergyE2ConsumptionsFromCsv(String csvPathFile, LocalDate dateOfData);
 	
 	/**
+	 * Crea y persiste los consumos del fichero csv pasado por argumento, obtenido de la página de UFD, consumo horario 
+	 * exportado entre fechas en formato CNMC
+	 * 
+	 * @param csvPathFile
+	 * @param dateOfData
+	 * @return
+	 */
+	public GenericActionResult<Source> loadUfdConsumptionsFromCsv(String csvPathFile, LocalDate dateOfData);
+	
+	/**
 	 * Genera un fichero .dat, procesable por gnuplot, por cada día de consumo incluido en la factura.
 	 * 
 	 * - Nombre del fichero: <yyyyMMdd>_<Num. facutura>_<Origen consumos verificados>.dat
