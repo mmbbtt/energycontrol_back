@@ -26,6 +26,7 @@ public enum EUserMessagesKeys
 	BillNotLoaded("BillNotLoaded"),
 	BillConsumptionsNotLoaded("BillConsumptionsNotLoaded"),
 	MSourceNotLoaded("MSourceNotLoaded"),
+	DeleteMSourceNotExists("DeleteMSourceNotExists"),
 	GnuPlotConsumptionBeforeBillConsumption("GnuPlotConsumptionBeforeBillConsumption"),
 	GnuPlotConsumptionOtherDay("GnuPlotConsumptionOtherDay"),
 	GnuPlotNoBillConsumptions("GnuPlotNoBillConsumptions"),
@@ -40,6 +41,7 @@ public enum EUserMessagesKeys
 	GnuPlotMissingDatFileName("GnuPlotMissingDatFileName"),
 	ConsumptionNotBelongBill("ConsumptionNotBelongBill"),
 	DateOfConsumptionNotBelongBill("DateOfConsumptionNotBelongBill");
+	
 	
 	public final String stringValue;
 	

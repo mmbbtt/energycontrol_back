@@ -274,6 +274,70 @@ public class EnergyControlBackServiceImpl implements EnergyControlBackService
 		return gar;
 	}
 	
+	public GenericActionResult<MSource> findMSourceByCode(String code)
+	{
+		GenericActionResult<MSource> gar = new GenericActionResult<MSource>();
+		gar.setActionResult(EResult.NOT_EXECUTED);
+		
+		try
+		{
+			MSource ms = this.mSourceDao.findByCode(code);
+			gar.setActionResult(EResult.OK);
+			gar.setResultObject(ms);
+		}
+		catch(Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			
+			BussinesException be = new BussinesException(
+				 e.getMessage()
+				,e
+				,EUserMessagesKeys.InternalError.stringValue
+				);
+			be.addUserMessageArgument("findMSourcesByCode");
+			
+			gar.setActionResult(EResult.KO, be);
+		}
+		
+		return gar;
+	}
+	
+	public ActionResult deleteMSource(String code)
+	{
+		ActionResult ar = new ActionResult(EResult.NOT_EXECUTED);
+		
+		try
+		{
+			MSource ms = this.mSourceDao.findByCode(code);
+			
+			if(ms == null)
+			{
+				String message = resourceBundleReader.getLocalizedMessage(EUserMessagesKeys.DeleteMSourceNotExists.stringValue, null);
+				BussinesException be =new BussinesException(message);
+				ar.setActionResult(EResult.KO, be);
+			}
+			else
+			{
+				this.mSourceDao.delete(ms);
+				ar.setActionResult(EResult.OK);
+			}
+		}
+		catch(Exception e)
+		{
+			logger.error(e.getMessage(), e);
+			
+			BussinesException be = new BussinesException(
+				 e.getMessage()
+				,e
+				,EUserMessagesKeys.InternalError.stringValue
+				);
+			be.addUserMessageArgument("deleteMSource");
+			
+			ar.setActionResult(EResult.KO, be);
+		}
+		
+		return ar;
+	}
 	
 	public GenericActionResult<Source> saveSource(Source source)
 	{

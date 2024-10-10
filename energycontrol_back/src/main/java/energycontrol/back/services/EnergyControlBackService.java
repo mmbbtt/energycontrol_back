@@ -27,7 +27,8 @@ public interface EnergyControlBackService
 	public GenericActionResult<Integer> generateDateHours(DateHour dateHourFrom, DateHour dateHourTo);
 	
 	/**
-	 * Persiste el maestro de origen de consumo pasado por argumnto.
+	 * Persiste el maestro de origen de consumo pasado por argumento.
+	 * Si ya existe lo actualiza, y en caso contrario lo inserta.
 	 * 
 	 * @param mSource
 	 * @return El MSource persistido.
@@ -42,12 +43,29 @@ public interface EnergyControlBackService
 	public GenericActionResult<List<MSource>> getMSources();
 	
 	/**
+	 * Busca el origen de datos maestro con código igual al pasado por argumento.
+	 * 
+	 * @param code Código del origen de datos maestro a buscar.
+	 * 
+	 * @return
+	 */
+	public GenericActionResult<MSource> findMSourceByCode(String code);
+
+	/**
 	 * Persiste el origen de consumo pasado por argumnto.
 	 * 
 	 * @param source
 	 * @return El origen de consumo persistido.
 	 */
 	public GenericActionResult<Source> saveSource(Source source);
+	
+	/**
+	 * Borra el origen de datos maestro con código igual al pasado por argumento.
+	 * 
+	 * @param code Código del origen de datos maetros a borrar.
+	 * @return
+	 */
+	public ActionResult deleteMSource(String code);
 	
 	/**
 	 * Borra de la unidad de persistencia el origen de datos, y todos sus consumos asociados.
